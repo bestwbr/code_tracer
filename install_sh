@@ -19,6 +19,6 @@ python3 \$code_tracer_dir/code_tracer.py
 EOF
 
 [[ ! -d $install_dir/code_tracer ]] && mkdir -p $install_dir/code_tracer
-cp {code_tracer,fzf_previewer,ignore_generator,searcher,ignore_checker} $install_dir/code_tracer
+cp {code_tracer,fzf_color,fzf_previewer,ignore_generator,searcher,ignore_checker} $install_dir/code_tracer
 
 echo "Now, you can use ct to trace codes"
