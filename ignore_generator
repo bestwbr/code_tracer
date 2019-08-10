@@ -8,7 +8,9 @@ if len(sys.argv) < 2:
     quit(1)
 rootDir = sys.argv[1]
 
-#dirs_dont_ignore = ['arch/arm/boot/dts']
+dirs_dont_ignore = [
+    #'arch/arm/boot/dts'
+]
 
 all_dirs = []
 should_be_searched = []
@@ -48,9 +50,10 @@ for ad in all_dirs:
             if ad2 in all_dirs:
                 all_dirs.remove(ad2)
 
-for dni in dirs_dont_ignore:
-    if dni in all_dirs:
-        all_dirs.remove(dni)
+if len(dirs_dont_ignore) > 0:
+    for dni in dirs_dont_ignore:
+        if dni in all_dirs:
+            all_dirs.remove(dni)
 
 for ignore in all_dirs:
     print(ignore)
