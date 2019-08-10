@@ -1,11 +1,16 @@
 #!/bin/bash
 
 execpath=$(dirname $0)
-ignorefile=$execpath/ignore
+srcpath=$PWD
+igsuffix=$(echo $srcpath | sed 's/\//-/g')
+[[ ! -d $execpath/.ignores ]] && mkdir -p $execpath/.ignores
+ignorefile=$execpath/.ignores/ignore$igsuffix
 
-findobjs=$(find . -maxdepth 2 -name "*.o")
-if [[ -n $findobjs ]]; then
-    python3 $execpath/ignore_generator $PWD > $ignorefile
-else
-    touch $ignorefile
+if [[ ! -r $ignorefile ]]; then
+    findobjs=$(find . -maxdepth 2 -name "*.o")
+    if [[ -n $findobjs ]]; then
+        python3 $execpath/ignore_generator $PWD > $ignorefile
+    else
+        touch $ignorefile
+    fi
 fi
