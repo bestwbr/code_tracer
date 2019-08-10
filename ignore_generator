@@ -1,0 +1,59 @@
+#!/usr/bin/python3
+
+import os
+import sys
+
+if len(sys.argv) < 2:
+    print('{0} <source path>'.format(sys.argv[0]))
+    quit(1)
+rootDir = sys.argv[1]
+
+dirs_dont_ignore = ['arch/arm/boot/dts']
+
+all_dirs = []
+should_be_searched = []
+for dirName, subdirList, fileList in os.walk(rootDir):
+    hasobj = False
+    rdl = len(rootDir) + 1
+
+    if '.git' in dirName:
+        continue
+
+    if 'include' in dirName:
+        continue
+
+    for fname in fileList:
+        if fname[-2:] == '.o':
+            hasobj = True
+            should_be_searched.append(dirName[rdl:])
+            break
+    if hasobj:
+        # don't ignore parent dir
+        dn = dirName[rdl:]
+        while dn != '':
+            if dn in all_dirs:
+                all_dirs.remove(dn)
+            dn = os.path.dirname(dn)
+    else:
+        # safe ignore
+        all_dirs.append(dirName[rdl:])
+
+if '' in all_dirs:
+    all_dirs.remove('')
+
+dirs_tmp = all_dirs[:]
+for ad in all_dirs:
+    #print('------> {0}'.format(ad))
+    for ad2 in dirs_tmp:
+        if ad in ad2 and ad != ad2:
+            if ad2 in all_dirs:
+                #print(ad2)
+                all_dirs.remove(ad2)
+    #print('====================================')
+
+for dni in dirs_dont_ignore:
+    if dni in all_dirs:
+        all_dirs.remove(dni)
+
+for ignore in all_dirs:
+    print(ignore)

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+line=$1
+termlines=$3
+half_termlines=$(($termlines / 2))
+
+if [[ $line -lt $half_termlines ]]; then
+    startline=0
+else
+    startline=$(($line - $half_termlines))
+fi
+file=$2
+
+bat -n --color=always -H $line -r $startline: $file

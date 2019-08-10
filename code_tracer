@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+
+import sys, os
+from subprocess import call as subcall
+from subprocess import Popen, PIPE
+
+from prompt_toolkit import PromptSession
+from prompt_toolkit import prompt
+from prompt_toolkit.application import run_in_terminal
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.history import InMemoryHistory
+from prompt_toolkit.completion import WordCompleter
+
+
+self_pathname = os.path.abspath(os.path.dirname(sys.argv[0]))
+editor = 'nvim'
+ignore_checker = self_pathname + '/ignore_checker'
+searcher = self_pathname + '/searcher'
+
+def special_split(content):
+    special_char = ['&', '.', '-', '*', '=', '?', ':', "'", '"', '(', '[', '{', '<', ')', ']', '}', '>', ',', ';']
+    clen = len(content)
+    cl = list(content)
+    for i in range(0, clen):
+        for sc in special_char:
+            if content[i] == sc:
+                cl[i] = ' '
+
+    return ''.join(cl).split()
+
+def parse_content(content):
+    return special_split(content)
+
+def main():
+    history = InMemoryHistory()
+    session = PromptSession(history=history, enable_history_search=True)
+    bindings = KeyBindings()
+
+    content = ''
+    filename = ''
+    linenum = ''
+    patterns = []
+
+    @bindings.add('c-v')
+    def _(event):
+        def print_content():
+            if content != '':
+                print(content)
+            else:
+                print('no content in buffer')
+        run_in_terminal(print_content)
+
+    @bindings.add('c-f')
+    def _(event):
+        if filename != '' and linenum != '':
+            subcall([editor, filename, '+'+linenum])
+
+    while True:
+        try:
+            content_competer = WordCompleter(patterns, ignore_case=True)
+            text = session.prompt('type pattern to search > ', key_bindings=bindings, completer=content_competer, complete_while_typing=True)
+            if text == '':
+                continue
+
+            history.append_string(text)
+
+            p = Popen([searcher, text], stdout=PIPE)
+            sel_text, stderr = p.communicate()
+
+            out_text = sel_text.decode('UTF-8').rstrip()
+            if out_text != '':
+                out_text_items = out_text.split(':')
+                filename = out_text_items[0]
+                linenum = out_text_items[1]
+                for i in range(2, 1+len(out_text_items[2:])):
+                    out_text_items[i] += ':'
+                content = ''.join(out_text_items[2:])
+                patterns = parse_content(content)
+        except (KeyboardInterrupt, EOFError):
+            quit(0)
+
+if __name__ == '__main__':
+    subcall([ignore_checker])
+    print('Code searcher, Author: Jason Wang, Version: v0.1')
+    print('C-v to view the selected content')
+    print('C-f to open the selected file with nvim')
+    print('Up or Down to get search history')
+    print('Tab to complete the next search pattern\n')
+    main()

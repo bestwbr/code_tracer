@@ -1,0 +1,24 @@
+#!/bin/bash
+
+which bat > /dev/null 2>&1 && [[ $? != 0 ]] && echo "no bat installed"
+which fzf > /dev/null 2>&1 && [[ $? != 0 ]] && echo "no fzf installed"
+which rg > /dev/null 2>&1 && [[ $? != 0 ]] && echo "no rg installed"
+
+if [[ $1 == "" ]]; then
+    echo "$0 <install dir>"
+    exit 1
+fi
+install_dir=$1
+
+cat > ~/bin/ct <<EOF
+#!/bin/bash
+
+code_tracer_dir="$install_dir/code_tracer"
+python3 \$code_tracer_dir/code_tracer.py
+
+EOF
+
+[[ ! -d $install_dir/code_tracer ]] && mkdir -p $install_dir/code_tracer
+cp {code_tracer,fzf_previewer,ignore_generator,searcher,ignore_checker} $install_dir/code_tracer
+
+echo "Now, you can use ct to trace codes"
