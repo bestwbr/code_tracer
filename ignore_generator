@@ -45,7 +45,7 @@ dirs_tmp = all_dirs[:]
 for ad in all_dirs:
     #print('------> {0}'.format(ad))
     for ad2 in dirs_tmp:
-        if ad in ad2 and ad != ad2:
+        if ad in ad2 and ad != ad2 and '/'+ad not in ad2:
             if ad2 in all_dirs:
                 #print(ad2)
                 all_dirs.remove(ad2)
