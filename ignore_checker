@@ -7,10 +7,9 @@ igsuffix=$(echo $srcpath | sed 's/\//-/g')
 ignorefile=$execpath/.ignores/ignore$igsuffix
 
 if [[ ! -r $ignorefile ]]; then
+    # Just useful in big C project
     findobjs=$(find . -maxdepth 2 -name "*.o")
     if [[ -n $findobjs ]]; then
         python3 $execpath/ignore_generator $PWD > $ignorefile
-    else
-        touch $ignorefile
     fi
 fi
