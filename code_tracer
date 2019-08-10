@@ -14,9 +14,8 @@ from prompt_toolkit.completion import WordCompleter
 
 self_pathname = os.path.abspath(os.path.dirname(sys.argv[0]))
 editor = 'nvim'
-ignore_checker = self_pathname + '/ignore_checker'
+ignore_manager = self_pathname + '/ignore_manager'
 searcher = self_pathname + '/searcher'
-add_file_to_ignore = self_pathname + '/add_file_to_ignore'
 
 def special_split(content):
     special_char = [
@@ -70,7 +69,7 @@ def main():
         def print_success():
             print('\'{0}\' has been added to ignore file'.format(filename))
         if filename != '' and linenum != '':
-            subcall([add_file_to_ignore, filename])
+            subcall([ignore_manager, '-a', filename])
             run_in_terminal(print_success)
         else:
             run_in_terminal(print_content)
@@ -103,7 +102,7 @@ def main():
             quit(0)
 
 if __name__ == '__main__':
-    subcall([ignore_checker])
+    subcall([ignore_manager, '-i'])
     print('Code searcher, Author: Jason Wang, Version: v0.1')
     print('C-v to view the selected content')
     print('C-f to open the selected file with nvim')
