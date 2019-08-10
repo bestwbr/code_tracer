@@ -13,7 +13,6 @@ dirs_dont_ignore = [
 ]
 
 all_dirs = []
-should_be_searched = []
 for dirName, subdirList, fileList in os.walk(rootDir):
     hasobj = False
     rdl = len(rootDir) + 1
@@ -27,7 +26,6 @@ for dirName, subdirList, fileList in os.walk(rootDir):
     for fname in fileList:
         if fname[-2:] == '.o':
             hasobj = True
-            should_be_searched.append(dirName[rdl:])
             break
     if hasobj:
         # don't ignore parent dir
