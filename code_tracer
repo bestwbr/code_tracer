@@ -18,7 +18,10 @@ ignore_checker = self_pathname + '/ignore_checker'
 searcher = self_pathname + '/searcher'
 
 def special_split(content):
-    special_char = ['&', '.', '-', '*', '=', '?', ':', "'", '"', '(', '[', '{', '<', ')', ']', '}', '>', ',', ';']
+    special_char = [
+        '&', '.', '-', '*', '=', '?', ':', "'", '"', '(', '[', '{',
+        '<', ')', ']', '}', '>', ',', ';'
+    ]
     clen = len(content)
     cl = list(content)
     for i in range(0, clen):
@@ -47,18 +50,25 @@ def main():
             if content != '':
                 print(content)
             else:
-                print('no content in buffer')
+                print('no selected content')
         run_in_terminal(print_content)
 
     @bindings.add('c-f')
     def _(event):
+        def print_content():
+                print('no selected file')
         if filename != '' and linenum != '':
             subcall([editor, filename, '+'+linenum])
+        else:
+            run_in_terminal(print_content)
 
     while True:
         try:
             content_competer = WordCompleter(patterns, ignore_case=True)
-            text = session.prompt('type pattern to search > ', key_bindings=bindings, completer=content_competer, complete_while_typing=True)
+            text = session.prompt('type pattern to search > ',
+                                  key_bindings=bindings,
+                                  completer=content_competer,
+                                  complete_while_typing=True)
             if text == '':
                 continue
 
