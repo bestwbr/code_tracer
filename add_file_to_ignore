@@ -1,0 +1,9 @@
+#!/bin/bash
+
+execpath=$(dirname $0)
+srcpath=$PWD
+igsuffix=$(echo $srcpath | sed 's/\//-/g')
+[[ ! -d $execpath/.ignores ]] && mkdir -p $execpath/.ignores
+ignorefile=$execpath/.ignores/ignore$igsuffix
+
+echo "$@" >> $ignorefile

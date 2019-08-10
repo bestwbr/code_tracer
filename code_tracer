@@ -16,6 +16,7 @@ self_pathname = os.path.abspath(os.path.dirname(sys.argv[0]))
 editor = 'nvim'
 ignore_checker = self_pathname + '/ignore_checker'
 searcher = self_pathname + '/searcher'
+add_file_to_ignore = self_pathname + '/add_file_to_ignore'
 
 def special_split(content):
     special_char = [
@@ -56,9 +57,21 @@ def main():
     @bindings.add('c-f')
     def _(event):
         def print_content():
-                print('no selected file')
+            print('no selected file')
         if filename != '' and linenum != '':
             subcall([editor, filename, '+'+linenum])
+        else:
+            run_in_terminal(print_content)
+
+    @bindings.add('c-a')
+    def _(event):
+        def print_content():
+            print('no selected file')
+        def print_success():
+            print('\'{0}\' has been added to ignore file'.format(filename))
+        if filename != '' and linenum != '':
+            subcall([add_file_to_ignore, filename])
+            run_in_terminal(print_success)
         else:
             run_in_terminal(print_content)
 
