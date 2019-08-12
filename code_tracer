@@ -124,7 +124,10 @@ def main():
                 content = ''.join(out_text_items[2:])
                 patterns = parse_content(content)
         except (KeyboardInterrupt, EOFError):
-            os.remove(history_lock)
+            try:
+                os.remove(history_lock)
+            except:
+                pass
             quit(0)
 
 if __name__ == '__main__':
