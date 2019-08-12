@@ -88,15 +88,21 @@ def main():
     @bindings.add('escape', 'i')
     def _(event):
         def print_ignorefile():
-            with open(ignore_file, 'r') as f:
-                print(f.read())
+            try:
+                with open(ignore_file, 'r') as f:
+                    print(f.read())
+            except:
+                print('no \'{0}\''.format(ignore_file))
         run_in_terminal(print_ignorefile)
 
     @bindings.add('escape', 'h')
     def _(event):
         def print_histfile():
-            with open(history_file, 'r') as f:
-                print(f.read())
+            try:
+                with open(history_file, 'r') as f:
+                    print(f.read())
+            except:
+                print('no \'{0}\''.format(history_file))
         run_in_terminal(print_histfile)
 
     while True:
