@@ -12,10 +12,17 @@ from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.completion import WordCompleter
 
 
+cwd = os.getcwd()
+cwd_suffix = cwd.replace('/', '-')
 self_pathname = os.path.abspath(os.path.dirname(sys.argv[0]))
 editor = 'nvim'
 ignore_manager = self_pathname + '/ignore_manager'
 searcher = self_pathname + '/searcher'
+ignore_dir = self_pathname + '/.ignores'
+history_dir = self_pathname + '/.histories'
+history_file = history_dir + '/' + 'history' + cwd_suffix
+history_lock = history_dir + '/.' + 'history' + cwd_suffix + '.lock'
+ignore_file = ignore_dir + '/' + 'ignore' + cwd_suffix
 
 def special_split(content):
     special_char = [
@@ -74,6 +81,24 @@ def main():
         else:
             run_in_terminal(print_content)
 
+    @bindings.add('escape', 'a')
+    def _(event):
+        subcall([editor, ignore_file])
+
+    @bindings.add('escape', 'i')
+    def _(event):
+        def print_ignorefile():
+            with open(ignore_file, 'r') as f:
+                print(f.read())
+        run_in_terminal(print_ignorefile)
+
+    @bindings.add('escape', 'h')
+    def _(event):
+        def print_histfile():
+            with open(history_file, 'r') as f:
+                print(f.read())
+        run_in_terminal(print_histfile)
+
     while True:
         try:
             content_competer = WordCompleter(patterns, ignore_case=True)
@@ -99,6 +124,7 @@ def main():
                 content = ''.join(out_text_items[2:])
                 patterns = parse_content(content)
         except (KeyboardInterrupt, EOFError):
+            os.remove(history_lock)
             quit(0)
 
 if __name__ == '__main__':

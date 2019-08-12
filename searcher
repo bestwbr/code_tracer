@@ -7,6 +7,9 @@ execpath=$(dirname $0)
 srcpath=$PWD
 igsuffix=$(echo $srcpath | sed 's/\//-/g')
 ignorefile=$execpath/.ignores/ignore$igsuffix
+[[ ! -d $execpath/.histories ]] && mkdir -p $execpath/.histories
+histfile=$execpath/.histories/history$igsuffix
+histlock=$execpath/.histories/.history${igsuffix}.lock
 if [[ -r $ignorefile  ]]; then
 ignore_arg="--ignore-file $ignorefile" 
 else
@@ -15,6 +18,14 @@ fi
 
 source $execpath/fzf_color
 
+if [[ ! -f $histlock ]]; then
+    tty > $histlock
+fi
+                                #| sed "/:\t* *\*/d" remove comment if necessary
 pattern=$(rg -n $ignore_arg "$@" | fzf --bind 'ctrl-u:half-page-up,ctrl-d:half-page-down,alt-u:preview-page-up,alt-d:preview-page-down,alt-j:preview-down,alt-k:preview-up,ctrl-v:toggle-preview,ctrl-r:kill-line' -0 --no-mouse -e --cycle --min-height=20 -d ':' --preview="echo '\033[1;32m  {1}\033[0m'; $execpath/fzf_previewer {2} {1} $tty_height" --preview-window=right:60%:hidden)
+
+if [[ $(cat $histlock) == $(tty) ]]; then
+    echo $pattern >> $histfile
+fi
 
 echo $pattern
