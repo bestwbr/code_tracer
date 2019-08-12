@@ -20,6 +20,6 @@ EOF
 chmod +x ~/bin/ct
 
 [[ ! -d $install_dir/code_tracer ]] && mkdir -p $install_dir/code_tracer
-cp {code_tracer,fzf_color,fzf_previewer,ignore_generator,searcher,ignore_checker} $install_dir/code_tracer
+cp {code_tracer,fzf_color,fzf_previewer,ignore_generator,searcher,ignore_manager} $install_dir/code_tracer
 
 echo "Now, you can use ct to trace codes"
