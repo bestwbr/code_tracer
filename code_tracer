@@ -138,7 +138,7 @@ def main():
 
 if __name__ == '__main__':
     subcall([ignore_manager, '-i'])
-    print('Code searcher, Author: Jason Wang, Version: v0.1')
+    print('Code searcher, Author: Jason Wang, Version: v0.2')
     print('  C-v to view the selected content')
     print('  C-f to open the selected file with nvim')
     print('  C-a to add the selected file to ignore file')
