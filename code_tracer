@@ -12,7 +12,7 @@ from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.completion import WordCompleter
 
 
-cwd = os.getcwd()
+cwd = os.getenv('PWD')
 cwd_suffix = cwd.replace('/', '-')
 self_pathname = os.path.abspath(os.path.dirname(sys.argv[0]))
 editor = 'nvim'
