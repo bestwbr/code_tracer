@@ -11,7 +11,7 @@ if [[ $1 == "-i" ]]; then
         # Just useful in big C project
         findobjs=$(find . -maxdepth 2 -name "*.o")
         if [[ -n $findobjs ]]; then
-            python3 $execpath/ignore_generator $PWD > $ignorefile
+            python $execpath/ignore_generator $PWD > $ignorefile
         fi
     fi
 elif [[ $1 == '-a' ]]; then

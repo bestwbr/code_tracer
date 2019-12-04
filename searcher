@@ -22,7 +22,7 @@ if [[ ! -f $histlock ]]; then
     tty > $histlock
 fi
                                 #| sed "/:\t* *\*/d" remove comment if necessary
-pattern=$(rg -n $ignore_arg "$@" | fzf --bind 'ctrl-u:half-page-up,ctrl-d:half-page-down,alt-u:preview-page-up,alt-d:preview-page-down,alt-j:preview-down,alt-k:preview-up,ctrl-v:toggle-preview,ctrl-r:kill-line' -0 --no-mouse -e --cycle --min-height=20 -d ':' --preview="echo '\033[1;32m  {1}\033[0m'; $execpath/fzf_previewer {2} {1} $tty_height" --preview-window=right:60%:hidden)
+pattern=$(rg --color=always -n $ignore_arg "$@" | fzf --ansi --bind 'ctrl-u:half-page-up,ctrl-d:half-page-down,alt-u:preview-page-up,alt-d:preview-page-down,alt-j:preview-down,alt-k:preview-up,ctrl-v:toggle-preview,ctrl-r:kill-line' -0 --no-mouse -e --cycle --min-height=20 -d ':' --preview="echo '\033[1;32m  {1}\033[0m'; $execpath/fzf_previewer {2} {1} $tty_height" --preview-window=right:60%:hidden)
 
 if [[ "$(cat $histlock)" == "$(tty)" ]]; then
     grep "$(echo "$pattern" | cut -d ':' -f 1-2)" $histfile > /dev/null 2>&1
